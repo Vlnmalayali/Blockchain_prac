@@ -1,0 +1,51 @@
+ Procedure
+
+Generate Hash: Create an MD5 hash of a secret password (e.g., "secret123").
+
+Attempt Reversal: Create a function that iterates through a list of potential passwords (a "dictionary attack").
+
+Compare: Hash every word in the dictionary and compare it to the target hash.
+
+Measure Difficulty: Record the time taken. If the password is not in the dictionary, the attack fails, demonstrating that without the key, the hash is useless.
+
+-------------------------------------------------------------------------------------------------------
+
+import hashlib
+import time
+
+def get_md5(input_string):
+    return hashlib.md5(input_string.encode('utf-8')).hexdigest()
+
+# 1. The Target: A hash of a password we want to 'crack'
+# Let's pretend we stole this from a database.
+target_password = "password123" 
+target_hash = get_md5(target_password)
+
+print(f"Target Hash to Reverse: {target_hash}")
+print("Attempting to reverse using brute-force dictionary attack...")
+
+# 2. The Attack: Try to guess the input
+# In a real scenario, this list would be billions of words long.
+possible_passwords = ["123456", "password", "admin", "welcome", "password123", "blockchain"]
+
+start_time = time.time()
+found = False
+
+for attempt in possible_passwords:
+    # Hash the guess
+    attempt_hash = get_md5(attempt)
+    
+    # Check if it matches the target
+    if attempt_hash == target_hash:
+        print(f"\n[SUCCESS] Password found: '{attempt}'")
+        found = True
+        break
+    else:
+        print(f"Checking '{attempt}'... (Hash: {attempt_hash[:10]}...) - Failed")
+
+end_time = time.time()
+
+if not found:
+    print("\n[FAILURE] Password not found in dictionary.")
+    
+print(f"Time taken: {end_time - start_time:.6f} seconds")
