@@ -1,0 +1,105 @@
+I.	Create the File
+•	Go to Remix IDE
+•	In the "File Explorers" tab (left sidebar), click the "Create New File" icon.
+•	Name it HouseRental.sol
+
+
+----------------------------------------------------------------------------------
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract HouseRental {
+    
+    // --- State Variables ---
+    address payable public landlord;
+    address public tenant;
+    
+    uint256 public rentAmount;
+    uint256 public securityDeposit;
+    
+    // Status to track if the house is currently rented
+    bool public isOccupied;
+
+    // --- Events (for Transparency) ---
+    // These logs serve as the permanent record of the agreement
+    event AgreementSigned(address indexed tenant, uint256 rent, uint256 deposit);
+    event RentPaid(address indexed tenant, uint256 amount, uint256 timestamp);
+    event AgreementTerminated(address indexed tenant, uint256 timestamp);
+
+    // --- Modifiers (for Security) ---
+    modifier onlyLandlord() {
+        require(msg.sender == landlord, "Only the landlord can perform this action");
+        _;
+    }
+
+    modifier onlyTenant() {
+        require(msg.sender == tenant, "Only the active tenant can perform this action");
+        _;
+    }
+
+    // --- Constructor ---
+    constructor(uint256 _rentAmount, uint256 _securityDeposit) {
+        landlord = payable(msg.sender);
+        rentAmount = _rentAmount; // in Wei (e.g., 1 Ether = 10^18 Wei)
+        securityDeposit = _securityDeposit;
+        isOccupied = false;
+    }
+
+    // --- Functions ---
+
+    // 1. Tenant signs the lease by paying the security deposit
+    function signLease() public payable {
+        require(!isOccupied, "Property is already occupied");
+        require(msg.value == securityDeposit, "Incorrect security deposit amount");
+
+        tenant = msg.sender;
+        isOccupied = true;
+        
+        // Transfer deposit to landlord immediately (or keep in contract if implementing escrow)
+        landlord.transfer(msg.value);
+
+        emit AgreementSigned(msg.sender, rentAmount, securityDeposit);
+    }
+
+    // 2. Tenant pays monthly rent
+    function payRent() public payable onlyTenant {
+        require(isOccupied, "No active lease found");
+        require(msg.value == rentAmount, "Incorrect rent amount");
+
+        // Transfer rent to landlord
+        landlord.transfer(msg.value);
+
+        emit RentPaid(msg.sender, msg.value, block.timestamp);
+    }
+
+    // 3. Landlord can update rent (only if vacant, to be fair)
+    function updateTerms(uint256 _newRent) public onlyLandlord {
+        require(!isOccupied, "Cannot change rent while occupied");
+        rentAmount = _newRent;
+    }
+}
+
+--------------------------------------------------------------------------------
+
+
+II.	Deploy (As Landlord):
+•	Go to the Deploy tab.
+•	Enter values in Wei. To keep it simple, let's say:
+o	_rentAmount: 1000000000000000000 (1 Ether)
+o	_securityDeposit: 2000000000000000000 (2 Ether)
+•	Click Transact (or Deploy).
+
+III.	Sign Lease (As Tenant):
+•	Switch Account: Go to the "Account" dropdown at the top left and select a different address (Account 2). This represents the Tenant.
+•	Go to the Value box (top of Deploy tab) and type 2 Ether (must match the security deposit).
+•	Scroll down to your deployed contract and click the red signLease button.
+•	Result: The isOccupied variable becomes true.
+
+
+IV.	Pay Rent:
+•	Keep the Tenant account selected.
+•	Change the Value box to 1 Ether (the rent amount).
+•	Click the red payRent button.
+•	Observation: Check the "Logs" in the console to see the RentPaid event.
+
