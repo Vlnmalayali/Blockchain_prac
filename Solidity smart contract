@@ -1,0 +1,44 @@
+Procedure
+1. Create the File
+•	Go to Remix IDE
+•	In the "File Explorers" tab (left sidebar), click the "Create New File" icon.
+•	Name it SimpleWallet.sol
+
+paste the code below
+---------------------------------------------------------------------------------
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+contract SimpleWallet {  
+    // Mapping to store user balances
+    mapping(address => uint256) private balances;
+    // Event to log deposits
+    event FundsDeposited(address indexed user, uint256 amount);
+
+    // Function to deposit Ether
+    function deposit() public payable {
+        balances[msg.sender] += msg.value;
+        emit FundsDeposited(msg.sender, msg.value);
+    }
+    // Function to check balance
+    function getBalance() public view returns (uint256) {
+        return balances[msg.sender];
+    }
+}
+--------------------------------------------------------------------------------------------
+
+2. Compile
+3. Deploy
+•	Click the Deploy & Run Transactions icon
+•	Environment: Select Remix VM (Cancun) or London. This gives you fake test accounts with 100 ETH each.
+•	Contract: Make sure SimpleWallet is selected.
+•	Click Deploy.
+4. Interact (Store & Retrieve)
+•	Once deployed, look at the "Deployed Contracts" section at the bottom left. 
+•	To Store (Deposit):
+1.	Go up to the Value box (under "Gas Limit").
+2.	Type 1 and change the dropdown from Wei to Ether.
+3.	Click the red/orange deposit button in your contract interface.
+4.	Observation: Look at the console (bottom of the screen). You will see a green checkmark indicating the transaction was mined into a block.
+•	To Retrieve (Get Balance):
+1.	Click the blue getBalance button.
+2.	Observation: You will see a number appear (e.g., 1000000000000000000). This is 1 Ether in Wei (the smallest unit of Ether).
