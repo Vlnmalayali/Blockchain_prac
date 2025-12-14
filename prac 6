@@ -1,0 +1,46 @@
+To write and deploy a simple smart contract using Solidity in Remix IDE, interact with the contract functions, and observe how each interaction generates a transaction on the blockchain.
+
+1.	In the File Explorer, click on “+” (New File) and name it:
+SimpleStorage.sol
+----------------------------------------------------
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// A simple smart contract to store and retrieve a number
+contract SimpleStorage {
+    uint256 private number;
+
+    // Event to log updates
+    event NumberUpdated(uint256 oldValue, uint256 newValue, address updatedBy);
+
+    // Function to update the stored number
+    function setNumber(uint256 _number) public {
+        uint256 old = number;
+        number = _number;
+        emit NumberUpdated(old, _number, msg.sender);
+    }
+
+    // Function to read the stored number
+    function getNumber() public view returns (uint256) {
+        return number;
+    }
+}
+---------------------------------------------------------
+
+
+3. Click Compile SimpleStorage.sol
+
+4. After successful compilation, go to the DEPLOY & RUN TRANSACTIONS tab:
+•	Set Environment to JavaScript VM (Prauge)
+•	Make sure SimpleStorage is selected under Contract
+•	Click Deploy
+
+5. After deployment:
+•	The contract instance will appear under Deployed Contracts
+•	Expand it to see the functions
+    To interact:
+•	Click getNumber → view default value (usually 0)
+•	Enter a value in setNumber (e.g., 10) and click the button
+•	Observe:
+o	A new transaction entry appears in the Transactions panel
+o	Click the transaction to view gas used, status, logs, and events
