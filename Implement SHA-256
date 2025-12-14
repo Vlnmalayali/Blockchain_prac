@@ -1,0 +1,27 @@
+import hashlib
+
+def generate_hash(data):
+    # 1. Encode the string to bytes
+    encoded_data = data.encode('utf-8')
+    # 2. Create the SHA-256 hash object
+    sha256_hash = hashlib.sha256(encoded_data)
+    # 3. Get the hexadecimal representation
+    hex_digest = sha256_hash.hexdigest()
+    
+    return hex_digest
+
+# Input 1: The original message
+input_1 = "Hello, Blockchain!"
+hash_1 = generate_hash(input_1)
+
+# Input 2: Same message, but changed a period to an exclamation mark
+# This is a tiny change.
+input_2 = "Hello, Blockchain."
+hash_2 = generate_hash(input_2)
+
+# Output results
+print(f"Input: '{input_1}'")
+print(f"Hash : {hash_1}")
+print("-" * 60)
+print(f"Input: '{input_2}'")
+print(f"Hash : {hash_2}")
