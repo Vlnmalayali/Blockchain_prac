@@ -1,3 +1,6 @@
+To write a simple Solidity smart contract that allows a user to deposit Ether (store balance) and check their balance (retrieve), and to deploy this contract using Remix IDE.
+
+
 Procedure
 1. Create the File
 •	Go to Remix IDE
