@@ -1,0 +1,22 @@
+from ecdsa import SigningKey, VerifyingKey
+
+# Step 1: Generate Private & Public Keys
+private_key = SigningKey.generate()
+public_key = private_key.verifying_key
+
+print("Private Key:", private_key.to_string().hex())
+print("Public Key:", public_key.to_string().hex())
+
+# Step 2: Message to be signed
+message = b"Blockchain Technology and Security Practical 3"
+
+# Step 3: Sign the Message
+signature = private_key.sign(message)
+print("\nSignature:", signature.hex())
+
+# Step 4: Verify the Signature
+try:
+    result = public_key.verify(signature, message)
+    print("\nSignature Verified:", result)
+except:
+    print("\nSignature Verification Failed")
